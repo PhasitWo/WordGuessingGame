@@ -5,5 +5,10 @@
 
 
 public class Stage {
-    
+    private String Correctword;
+    private String[] imagelst;
+
+    public Stage(String a){
+        this.Correctword = a;
+    }
 }
