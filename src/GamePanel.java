@@ -51,6 +51,8 @@ public class GamePanel extends JPanel implements Runnable {
     
     @Override
     public void paintComponent(Graphics g) {
+        // Graphic g is the object that display graphic on gamePanel. when repaint() is called, it will automatically pass Graphic g to this method.
+        // then we can customize this Graphic g (customize what will display on screen)
         super.paintComponent(g); // paint default component
         Graphics2D g2 = (Graphics2D) g; // downcast to Graphics2D and add our own stuff
         // paint game component
