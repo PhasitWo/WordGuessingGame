@@ -1,16 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 
-/**
- *
- * @author ifpotsawat
- */
+import javax.swing.JFrame;
+
 public class Main {
 
     public static void main(String[] args) {
-        // Test 12345677889 hello
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Word Guessing Game");
+        
+        // add game panel to window
+        GamePanel gamePanel = new GamePanel();
+        window.add(gamePanel);
+        window.pack(); // fit window to gamePanel
+        window.setLocationRelativeTo(null); // window will appear on the center
+        window.setVisible(true);
+        
+        gamePanel.startGameThread();
     }
     
 }
