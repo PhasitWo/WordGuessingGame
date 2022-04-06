@@ -12,13 +12,15 @@ public class Main {
         // add game panel to window
         GamePanel gamePanel = new GamePanel();
         MainMenuPanel mainPanel = new MainMenuPanel();
+        gamePanel.add(mainPanel);
         window.add(gamePanel);
-        window.add(mainPanel);
         window.pack(); // fit window to gamePanel
         window.setLocationRelativeTo(null); // window will appear on the center
         window.setVisible(true);
-
+        
         gamePanel.startGameThread();
+        
+        
     }
     
 }
