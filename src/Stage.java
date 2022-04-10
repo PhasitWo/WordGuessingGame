@@ -55,7 +55,7 @@ public class Stage {
     public String toString(){
         return "Correct word: "+this.Correctword+
                 "\n"+"word count: "+this.wordcnt+
-                "\n"+"image files: "+this.imagelst.toString();
+                "\n"+"image files: "+this.imagelst;
     }
     
     //method check word
