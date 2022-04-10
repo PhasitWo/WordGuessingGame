@@ -82,7 +82,7 @@ public class Stage {
             if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
             else imagelst.add(datasplit[i]);
             }
-        Stagelst[Stagecnt+1] = new Stage(Correctword,wordcnt,imagelst);
+        Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,imagelst);
         Stagecnt++;
         imagelst.clear();
         }
