@@ -113,7 +113,6 @@ public class Stage {
             StringBuilder sb = new StringBuilder();
             String fileLine = "";
             while ((fileLine = br.readLine()) != null) {
-                System.out.println(fileLine);
                 sb.append(fileLine);
                 sb.append(System.lineSeparator());
             }
