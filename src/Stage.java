@@ -3,9 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class Stage {
@@ -100,5 +103,26 @@ public class Stage {
             System.out.println(x.toString());
         }
     }
+    
+    //test method read txt file
+    public static String readTextFile () {
+          String fileContent = "";
+          BufferedReader br = null; ;
+        try {
+            br = new BufferedReader (new FileReader("Stagelist.txt"));
+            StringBuilder sb = new StringBuilder();
+            String fileLine = "";
+            while ((fileLine = br.readLine()) != null) {
+                System.out.println(fileLine);
+                sb.append(fileLine);
+                sb.append(System.lineSeparator());
+            }
+            fileContent = sb.toString();
+            br.close();
+        } catch (IOException ioe) {
+            ioe.getMessage();
+        }
+        return fileContent;
+}
 }
 
