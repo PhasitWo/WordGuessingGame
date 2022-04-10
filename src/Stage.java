@@ -73,26 +73,26 @@ public class Stage {
         Stage[] Stagelst = new Stage[5];
         int Stagecnt = 0;
         String Correctword="";int wordcnt=0;ArrayList imagelst = new ArrayList<String>();
+        BufferedReader br = null;        
         
         try {
-        File myfile = new File("Stagelist.txt");
-        Scanner S = new Scanner(myfile);
-        while (S.hasNextLine()) {
-        String data = S.nextLine();
-        String[] datasplit = data.split(" ");
-        for (int i=0;i<datasplit.length;i++){
-            if (i==0) Correctword = datasplit[i];
-            if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
-            else imagelst.add(datasplit[i]);
+            br = new BufferedReader (new FileReader("Stagelist.txt"));
+            String fileLine = "";
+            while ((fileLine = br.readLine()) != null) {
+            String data = fileLine;
+            String[] datasplit = data.split(" ");
+            for (int i=0;i<datasplit.length;i++){
+                if (i==0) Correctword = datasplit[i];
+                if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
+                else imagelst.add(datasplit[i]);
+                }
+            Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,imagelst);
+            Stagecnt++;
+            imagelst.clear();
             }
-        Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,imagelst);
-        Stagecnt++;
-        imagelst.clear();
-        }
-        S.close();
-        } catch (FileNotFoundException e) {
-        System.out.println("An error occurred.");
-        e.printStackTrace();
+            br.close();
+        } catch (IOException ioe) {
+            ioe.getMessage();
         }
         return Stagelst;
     }
@@ -107,7 +107,7 @@ public class Stage {
     //test method read txt file
     public static String readTextFile () {
           String fileContent = "";
-          BufferedReader br = null; ;
+          BufferedReader br = null;
         try {
             br = new BufferedReader (new FileReader("Stagelist.txt"));
             StringBuilder sb = new StringBuilder();
