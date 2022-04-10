@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 public class Main {
 
     public static void main(String[] args) {
+        // create Stage list
         //Stage[] S1 = Stage.CreateStagelst();
         //Stage.Displaystagelst(S1);
         JFrame window = new JFrame();
