@@ -7,7 +7,7 @@ public class Main {
         // create Stage list
         //Stage[] S1 = Stage.CreateStagelst();
         //Stage.Displaystagelst(S1);
-        //System.out.println(Stage.readTextFile());
+        System.out.println(Stage.readTextFile());
         
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
