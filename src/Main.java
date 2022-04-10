@@ -5,8 +5,8 @@ public class Main {
 
     public static void main(String[] args) {
         // create Stage list
-        //Stage[] S1 = Stage.CreateStagelst();
-        //Stage.Displaystagelst(S1);
+        Stage[] S1 = Stage.CreateStagelst();
+        Stage.Displaystagelst(S1);
         System.out.println(Stage.readTextFile());
         
         JFrame window = new JFrame();
