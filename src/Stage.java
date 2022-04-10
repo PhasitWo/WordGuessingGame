@@ -67,7 +67,7 @@ public class Stage {
     
     //method create stagelst from text file
     public static Stage[] CreateStagelst(){
-        Stage[] Stagelst = new Stage[10];
+        Stage[] Stagelst = new Stage[5];
         int Stagecnt = 0;
         String Correctword="";int wordcnt=0;ArrayList imagelst = new ArrayList<String>();
         
