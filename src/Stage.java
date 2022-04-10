@@ -95,7 +95,7 @@ public class Stage {
     }
     
     //method display stage list
-    public void Displaystagelst(Stage[] a){
+    public static void Displaystagelst(Stage[] a){
         for (Stage x: a){
             System.out.println(x.toString());
         }
