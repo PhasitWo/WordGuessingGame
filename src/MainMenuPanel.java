@@ -18,8 +18,8 @@ public class MainMenuPanel extends JPanel {
     
     class StartButton extends JButton {
         public StartButton() {
-            super("Start");
-            this.setFont(new Font("Arial", Font.PLAIN, 40));
+            super("เริ่ม !");
+            this.setFont(new Font("Tahoma", Font.PLAIN, 40));
             this.setFocusPainted(false); // remove border around text
             this.setBounds(540, 200, 200, 200); // set pos and size
             this.addActionListener(new ActionListener() {

@@ -1,4 +1,4 @@
-Bulldog 2 Bull Dog
+Bulldog 2 pictures/RSI_Divergent.png pictures/default_error.png
 Jellyfish 3 Jelly Fish
 Keyboard 2 Key Board
 Lipstick 3 Lip Stick

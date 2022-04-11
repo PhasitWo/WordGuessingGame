@@ -16,8 +16,9 @@ public class Main {
         // add game panel to window
         GamePanel gamePanel = new GamePanel(S1);
         MainMenuPanel mainPanel = new MainMenuPanel();
-        gamePanel.add(mainPanel);
         window.add(gamePanel);
+        window.setGlassPane(mainPanel);
+        window.getGlassPane().setVisible(true);
         window.pack(); // fit window to gamePanel
         window.setLocationRelativeTo(null); // window will appear on the center
         window.setVisible(true);

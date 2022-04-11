@@ -1,11 +1,15 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -13,15 +17,21 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenHeight = 720;
     final int FPS = 30;
     private Thread gameThread; // so gameThread will stay until GamePanel instance is disposed
+    // stage
     private Stage[] stageList;
     private Stage currentStage;
+    private int stageIndex;
     
     public GamePanel(Stage[] stageList) {
+        this.setLayout(null);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.green);
         this.setDoubleBuffered(true);
+        // stage
         this.stageList = stageList;
-        this.currentStage = stageList[0];
+        this.stageIndex = 0;
+        this.currentStage = stageList[stageIndex];
+        this.add(new NextStageButton());
        
     }
 
@@ -63,11 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g); // paint default component
         Graphics2D g2 = (Graphics2D) g; // downcast to Graphics2D and add our own stuff
         // paint game component
-        ArrayList<String> paths = new ArrayList<>();
-        paths.add("pictures/RSI Divergent.png");
-        paths.add("pictures/default_error.png");
-        paths.add("pictures/default_error.png");
-        paths.add("pictures/default_error.png");
+        ArrayList<String> paths = this.currentStage.getimagelst();
         this.drawImage(g2, paths);
         
     }
@@ -97,5 +103,20 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < imgCnt; i++) {
             g.drawImage(imageArr.get(i), startPoint + (i*(WIDTH+INTERVAL)), 40, WIDTH, HEIGHT, null);
         }
+    }
+    
+        class NextStageButton extends JButton {
+            public NextStageButton() {
+                super("next stage");
+                this.setFont(new Font("Tahoma", Font.PLAIN, 40));
+                this.setFocusPainted(false); // remove border around text
+                this.setBounds(100, 500, 200, 200); // set pos and size
+                this.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        GamePanel.this.currentStage = stageList[++stageIndex];
+                    }
+                });
+            }
     }
 }
