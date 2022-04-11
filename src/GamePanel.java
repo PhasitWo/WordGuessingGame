@@ -115,6 +115,7 @@ public class GamePanel extends JPanel implements Runnable {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         GamePanel.this.currentStage = stageList[++stageIndex];
+                        NextStageButton.this.setText("hey");
                     }
                 });
             }
