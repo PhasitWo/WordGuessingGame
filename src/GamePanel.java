@@ -82,6 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
                 try {
                     imageArr.add(ImageIO.read(getClass().getResourceAsStream("pictures/default_error.png")));
                 } catch (Exception e) {
+                    
                 }
             }
         }

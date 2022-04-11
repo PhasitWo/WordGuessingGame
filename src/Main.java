@@ -14,7 +14,7 @@ public class Main {
         window.setTitle("Word Guessing Game");
         
         // add game panel to window
-        GamePanel gamePanel = new GamePanel();
+        GamePanel gamePanel = new GamePanel(S1);
         MainMenuPanel mainPanel = new MainMenuPanel();
         gamePanel.add(mainPanel);
         window.add(gamePanel);
