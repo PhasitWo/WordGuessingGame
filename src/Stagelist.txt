@@ -1,0 +1,5 @@
+Bulldog 2 pictures/1.png pictures/2.png
+Jellyfish 3 pictures/3.png pictures/4.png pictures/5.png
+Keyboard 2 pictures/6.png board
+Lipstick 3 pictures/1.png Stick pictures/6.png
+Facebook 2 Face pictures/2.png
