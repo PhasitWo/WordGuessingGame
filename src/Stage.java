@@ -72,7 +72,8 @@ public class Stage {
     public static Stage[] CreateStagelst(){
         Stage[] Stagelst = new Stage[5];
         int Stagecnt = 0;
-        String Correctword="";int wordcnt=0;ArrayList imagelst = new ArrayList<String>();
+        String Correctword="";
+        int wordcnt=0;
         BufferedReader br = null;        
         
         try {
@@ -81,14 +82,14 @@ public class Stage {
             while ((fileLine = br.readLine()) != null) {
             String data = fileLine;
             String[] datasplit = data.split(" ");
+            ArrayList IMG = new ArrayList<String>();
             for (int i=0;i<datasplit.length;i++){
                 if (i==0) Correctword = datasplit[i];
                 if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
-                else imagelst.add(datasplit[i]);
+                if (i>=2) IMG.add(datasplit[i]);
                 }
-            Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,imagelst);
+            Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,IMG);
             Stagecnt++;
-            imagelst.clear();
             }
             br.close();
         } catch (IOException ioe) {
