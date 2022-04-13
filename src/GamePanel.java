@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.util.Arrays;
 import java.util.Collections;
+import javax.swing.JTextField;
 
 public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = 1280;
@@ -30,10 +31,14 @@ public class GamePanel extends JPanel implements Runnable {
     private Stage[] stageList;
     private Stage currentStage;
     private int stageIndex;
+    private String currentUserAnswer = "";
     // guess buttons array
     private GuessButton[] guessButtonsArr = new GuessButton[18];
+    private ArrayList<GuessButton> lastPressButtonList = new ArrayList<>();
     // letter array
     private ArrayList<Character> allLetter = new ArrayList<>();
+    // Answer Field
+    private answerField ansField;
     
     public GamePanel(Stage[] stageList) {
         this.setLayout(new GridBagLayout());
@@ -52,12 +57,14 @@ public class GamePanel extends JPanel implements Runnable {
         // create all guess buttons
         this.createGuessButtons();
         this.labelingGuessButtons();
-        // place stage changing button
-        this.placeComp(Box.createGlue(), 0, 0, 1, 1);
-        this.placeComp(Box.createGlue(), 0, 1, 1, 1);
-        this.placeComp(Box.createGlue(), 0, 2, 1, 1);
-        this.placeComp(Box.createGlue(), 0, 3, 1, 1);
-        this.placeComp(new NextStageButton(), 1, 4, 4, 1);
+        // place comps button
+        for (int y = 0; y <= 10; y++) {
+            this.placeComp(Box.createGlue(), 0, y, 1, 1);
+        }
+        ansField = new answerField();
+        this.placeComp(ansField, 1, 11, 4, 1);
+        this.placeComp(new deleteButton(), 5, 11, 1, 1);
+        this.placeComp(new NextStageButton(), 1, 15, 4, 1);
     }
 
     public void startGameThread() {
@@ -133,9 +140,10 @@ public class GamePanel extends JPanel implements Runnable {
     private void createGuessButtons() {
         GuessButton gb;
         gbc.insets = new Insets(5, 5, 5, 5); // gap between button
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         int cnt = 0;
         for (int col = 0; col <= 5; col++) {
-            for (int row = 5; row <= 7; row++) {
+            for (int row = 12; row <= 14; row++) {
                 gb = new GuessButton();
                 guessButtonsArr[cnt++] = gb;
                 this.placeComp(gb, col, row, 1, 1);
@@ -143,9 +151,45 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     
+    private void setEnableAllGuessButtons(boolean bool) {
+        boolean isInLastPressButtonList;
+        if (bool) {
+            // in case that there are buttons that have been pressed
+            if (lastPressButtonList.size() != 0) {
+                for (GuessButton gb : guessButtonsArr) {
+                    isInLastPressButtonList = false;
+                    // if this gb is in last press button, don't enable it yet
+                    for (GuessButton lastPressed : lastPressButtonList) {
+                        if (gb == lastPressed) {
+                            isInLastPressButtonList = true;
+                            break;
+                        }
+                    }
+                    if (!isInLastPressButtonList)
+                        gb.setEnabled(true);
+                }
+                // enable 'lastest' pressed button
+                GuessButton lastestButton = lastPressButtonList.get(lastPressButtonList.size() - 1);
+                lastestButton.setEnabled(true);
+                lastPressButtonList.remove(lastestButton);
+            // in case no buttons is pressed
+            } else {
+                for (GuessButton gb : guessButtonsArr) {
+                    gb.setEnabled(true);
+                }
+            }
+        } else {
+            for (GuessButton gb : guessButtonsArr) {
+                gb.setEnabled(false);
+            }
+        }
+    }
+    
     private void labelingGuessButtons() {
         String correctWord = this.currentStage.getCorrectword();
         ArrayList<Character> toLabeling = new ArrayList<>();
+        String char_;
+        // add correct character to toLabeling array
         for (int i = 0; i < correctWord.length(); i++) {
             toLabeling.add(correctWord.charAt(i));
         }
@@ -158,7 +202,9 @@ public class GamePanel extends JPanel implements Runnable {
         Collections.shuffle(toLabeling); // shuffle before assign to buttons
         // assign toLabeling to guessButtons
         for (int j = 0; j <= 17; j++) {
-            guessButtonsArr[j].setText(Character.toString(toLabeling.get(j)));
+            char_ = Character.toString(toLabeling.get(j));
+            guessButtonsArr[j].setText(char_);
+            guessButtonsArr[j].setGuessLetter(char_);
         }
     }
     
@@ -170,6 +216,24 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(component, gbc);
     }
     
+    private void changeStage() {
+        this.currentStage = stageList[++stageIndex]; // change current stage and increase stageIndex by 1
+        this.labelingGuessButtons(); // label guess button with new stage infomation
+        // reset currentUserAnswer and reset ansField
+        this.currentUserAnswer = "";
+        this.ansField.updateField();
+        // clear lastPressButtonlist and enable all buttons
+        this.lastPressButtonList.clear();
+        this.setEnableAllGuessButtons(true);
+    }
+    
+    private boolean checkAnswer() {
+            if (this.currentUserAnswer.equals(this.currentStage.getCorrectword()))
+                return true;
+            else
+                return false;
+    }
+    
         private class NextStageButton extends JButton {
             public NextStageButton() {
                 super("next stage");
@@ -178,25 +242,83 @@ public class GamePanel extends JPanel implements Runnable {
                 this.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        GamePanel.this.currentStage = stageList[++stageIndex];
-                        GamePanel.this.labelingGuessButtons();
+                        GamePanel.this.changeStage();
                     }
                 });
             }
     }
         
         private class GuessButton extends JButton {
+            private String guessLetter;
+            
             public GuessButton() {
-                super("---");
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
-                /* this.addActionListener(new ActionListener() {
+                this.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        GamePanel.this.currentStage = stageList[++stageIndex];
-                        NextStageButton.this.setText("hey");
+                        GamePanel.this.currentUserAnswer += GuessButton.this.guessLetter;
+                        GamePanel.this.ansField.updateField();
+                        GamePanel.this.lastPressButtonList.add(GuessButton.this);
+                        GuessButton.this.setEnabled(false); // disable after getting pressed
+                        // checkAnswer
+                        if (GamePanel.this.currentUserAnswer.length() == GamePanel.this.currentStage.getCorrectword().length()) { // if length of currentUserAnswer matches correct word length
+                            GamePanel.this.setEnableAllGuessButtons(false); // disable all buttons after the length matches
+                            if (GamePanel.this.checkAnswer()) {
+                                GamePanel.this.changeStage();
+                            } else {
+                                ansField.setForeground(Color.red); // if answer is false then set text color to red
+                            }
+                        }
                     }
-                }); */
+                });
+            }
+            
+            public void setGuessLetter(String letter) {
+                this.guessLetter = letter;
+            }
+        }
+        
+        private class deleteButton extends JButton {
+            public deleteButton() {
+                super("del");
+                this.setFont(new Font("Tahoma", Font.PLAIN, 30));
+                this.setFocusPainted(false); // remove border around text
+                this.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                           // if this statement is true that means all button have been disabled, so we need to enable it back after user press del button
+                           if (GamePanel.this.currentUserAnswer.length() == GamePanel.this.currentStage.getCorrectword().length()) {
+                               GamePanel.this.setEnableAllGuessButtons(true);
+                               ansField.setForeground(Color.BLACK); // since the answer is false and text is red, turn it back to black
+                           }
+                           // if above statement is false that means not all buttons have been disabled. so we need to enable it back in order
+                           else if (GamePanel.this.lastPressButtonList.size() != 0) {
+                                int lastIndex = GamePanel.this.lastPressButtonList.size() - 1;
+                                GuessButton lastPressedButton = GamePanel.this.lastPressButtonList.get(lastIndex);
+                                lastPressedButton.setEnabled(true);
+                                GamePanel.this.lastPressButtonList.remove(lastPressedButton); // remove lastPressedButton from list
+                           }
+                           // delete last letter and updateField()
+                           int len = GamePanel.this.currentUserAnswer.length();
+                           if (len != 0) {
+                                GamePanel.this.currentUserAnswer = GamePanel.this.currentUserAnswer.substring(0, len-1);
+                                ansField.updateField();
+                           }
+                    }
+                });
+            }
+        }
+        
+        private class answerField extends JTextField {
+            public answerField() {
+                this.setFont(new Font("Tahoma", Font.PLAIN, 40));
+                this.updateField();
+                this.setEditable(false);
+            }
+            
+            public void updateField() {
+                this.setText(GamePanel.this.currentUserAnswer);
             }
         }
 }
