@@ -5,28 +5,21 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.JTextField;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel {
     final int screenWidth = 1280;
     final int screenHeight = 720;
     final int FPS = 30;
-    private Thread gameThread; // so gameThread will stay until GamePanel instance is disposed
-    private GridBagConstraints gbc = new GridBagConstraints(); // for placing component to grid
     // stage
     private Stage[] stageList;
     private Stage currentStage;
@@ -39,9 +32,11 @@ public class GamePanel extends JPanel implements Runnable {
     private ArrayList<Character> allLetter = new ArrayList<>();
     // Answer Field
     private answerField ansField;
+    // image arrayList
+    private ArrayList<JLabel> imageList = new ArrayList<>();
     
     public GamePanel(Stage[] stageList) {
-        this.setLayout(new GridBagLayout());
+        this.setLayout(null);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.green);
         this.setDoubleBuffered(true);
@@ -54,64 +49,28 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < str.length(); i++) {
             this.allLetter.add(str.charAt(i));
         }
-        // create all guess buttons
+        // buttons
+        this.placeComp(new NextStageButton(), screenWidth/2, 600, 250, 50, true);
         this.createGuessButtons();
         this.labelingGuessButtons();
-        // place comps button
-        for (int y = 0; y <= 10; y++) {
-            this.placeComp(Box.createGlue(), 0, y, 1, 1);
-        }
+        this.placeComp(new deleteButton(), 850, 290, 80, 50, true);
+        // answerfield
         ansField = new answerField();
-        this.placeComp(ansField, 1, 11, 4, 1);
-        this.placeComp(new deleteButton(), 5, 11, 1, 1);
-        this.placeComp(new NextStageButton(), 1, 15, 4, 1);
-    }
+        this.placeComp(ansField, screenWidth/2, 290, 330, 60, true);
 
-    public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start(); // this will execute overridden run method
     }
-    
-    @Override // game loop
-    public void run() {
-        double drawInterval = 1000000000/FPS; // Interval between frames in nanosecond
-        double delta = 0; // delta indicates how many frames needed to paint
-        long lastTime = System.nanoTime();
-        long currentTime;
-        
-        while (gameThread != null) { 
-            // fix game loop to run 30 FPS
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
-            if (delta >= 1) {
-                // when there are more than 1 frame to paint (reach draw interval)
-                update(); // update information
-                repaint(); // draw the new information, repaint() method will call paintComponent()
-                delta--; // decrease 1 delta as it has painted 1 frame
-
-            }
-        }
-    }
-    
-    private void update() {
-        
-    }
-    
-    @Override
+     @Override
     public void paintComponent(Graphics g) {
         // Graphic g is the object that display graphic on gamePanel. when repaint() is called, it will automatically pass Graphic g to this method.
         // then we can customize this Graphic g (customize what will display on screen)
         super.paintComponent(g); // paint default component
-        Graphics2D g2 = (Graphics2D) g; // downcast to Graphics2D and add our own stuff
         // paint game component
         ArrayList<String> paths = this.currentStage.getimagelst();
-        this.drawImage(g2, paths);
+        this.drawImage(g, paths);
         
     }
     
-    private void drawImage(Graphics2D g, ArrayList<String> imagePath) {
-        BufferedImage bi = null;
+    private void drawImage(Graphics g, ArrayList<String> imagePath) {
         ArrayList<BufferedImage> imageArr = new ArrayList<>();
         for (String path : imagePath) {
             try {
@@ -120,7 +79,6 @@ public class GamePanel extends JPanel implements Runnable {
                 try {
                     imageArr.add(ImageIO.read(getClass().getResourceAsStream("pictures/default_error.png")));
                 } catch (Exception e) {
-                    
                 }
             }
         }
@@ -139,14 +97,17 @@ public class GamePanel extends JPanel implements Runnable {
     
     private void createGuessButtons() {
         GuessButton gb;
-        gbc.insets = new Insets(5, 5, 5, 5); // gap between button
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        int BUTTON_WIDTH = 70;
+        int BUTTON_HEIGHT = 70;
+        int INTERVAL = 10;
+        int X_START_POINT = (screenWidth/2) - ((BUTTON_WIDTH*6) + (INTERVAL*5))/2;
+        int Y_START_POINT = 330;
         int cnt = 0;
-        for (int col = 0; col <= 5; col++) {
-            for (int row = 12; row <= 14; row++) {
+        for (int y = 0; y <= 2; y++) {
+            for (int x = 0; x <= 5; x++) {
                 gb = new GuessButton();
                 guessButtonsArr[cnt++] = gb;
-                this.placeComp(gb, col, row, 1, 1);
+                this.placeComp(gb, X_START_POINT + ((INTERVAL + BUTTON_WIDTH) * x), Y_START_POINT + ((INTERVAL + BUTTON_HEIGHT) * y), BUTTON_WIDTH, BUTTON_HEIGHT, false);
             }
         }
     }
@@ -208,12 +169,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     
-    private void placeComp(Component component,int x, int y, int w, int h) { // for placing component in grid
-        gbc.gridx = x;
-        gbc.gridy = y;
-        gbc.gridwidth = w;
-        gbc.gridheight = h;
-        this.add(component, gbc);
+    private void placeComp(Component component,int x, int y, int w, int h, boolean centerAlignment) {
+        if (centerAlignment)
+            component.setBounds(x-w/2, y-h/2, w, h);
+        else
+            component.setBounds(x, y, w, h);
+        this.add(component);
     }
     
     private void changeStage() {
@@ -225,6 +186,8 @@ public class GamePanel extends JPanel implements Runnable {
         // clear lastPressButtonlist and enable all buttons
         this.lastPressButtonList.clear();
         this.setEnableAllGuessButtons(true);
+        // draw new images
+        this.repaint(); // this method will call paintcomponent()
     }
     
     private boolean checkAnswer() {
@@ -281,8 +244,8 @@ public class GamePanel extends JPanel implements Runnable {
         
         private class deleteButton extends JButton {
             public deleteButton() {
-                super("del");
-                this.setFont(new Font("Tahoma", Font.PLAIN, 30));
+                this.setText("del");
+                this.setFont(new Font("Tahoma", Font.PLAIN, 20));
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
                     @Override
@@ -321,4 +284,37 @@ public class GamePanel extends JPanel implements Runnable {
                 this.setText(GamePanel.this.currentUserAnswer);
             }
         }
+        
+
+    
+    /*    public void startGameThread() {
+        gameThread = new Thread(this);
+        gameThread.start(); // this will execute overridden run method
+    }
+    
+    @Override // game loop
+    public void run() {
+        double drawInterval = 1000000000/FPS; // Interval between frames in nanosecond
+        double delta = 0; // delta indicates how many frames needed to paint
+        long lastTime = System.nanoTime();
+        long currentTime;
+        
+        while (gameThread != null) { 
+            // fix game loop to run 30 FPS
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
+            if (delta >= 1) {
+                // when there are more than 1 frame to paint (reach draw interval)
+                update(); // update information
+                repaint(); // draw the new information, repaint() method will call paintComponent()
+                delta--; // decrease 1 delta as it has painted 1 frame
+
+            }
+        }
+    }
+    
+    private void update() {
+        
+    }*/
 }

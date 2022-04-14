@@ -7,6 +7,7 @@ public class Main {
         // create Stage list
         Stage[] S1 = Stage.CreateStagelst();
         
+        // init jframe
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -16,15 +17,11 @@ public class Main {
         GamePanel gamePanel = new GamePanel(S1);
         MainMenuPanel mainPanel = new MainMenuPanel();
         window.add(gamePanel);
-        window.setGlassPane(mainPanel);
+        window.setGlassPane(mainPanel); // set mainMenuPanel on first layer
         window.getGlassPane().setVisible(true);
         window.pack(); // fit window to gamePanel
         window.setLocationRelativeTo(null); // window will appear on the center
         window.setVisible(true);
-        
-        gamePanel.startGameThread();
-        
-        
     }
     
 }
