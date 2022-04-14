@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.util.Collections;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class GamePanel extends JPanel {
@@ -34,6 +35,8 @@ public class GamePanel extends JPanel {
     private answerField ansField;
     // image arrayList
     private ArrayList<JLabel> imageList = new ArrayList<>();
+    //Crystal Owned
+    private CrystalSys Crystalcnt; //Text display crystal left
     
     public GamePanel(Stage[] stageList) {
         this.setLayout(null);
@@ -54,6 +57,10 @@ public class GamePanel extends JPanel {
         this.createGuessButtons();
         this.labelingGuessButtons();
         this.placeComp(new deleteButton(), 850, 290, 80, 50, true);
+        this.placeComp(new HintButton(), 430, 290, 80, 50, true);
+        //label --> Crystals
+        Crystalcnt = new CrystalSys();
+        this.placeComp(Crystalcnt, 1100, 400, 300, 150, true);
         // answerfield
         ansField = new answerField();
         this.placeComp(ansField, screenWidth/2, 290, 330, 60, true);
@@ -188,6 +195,7 @@ public class GamePanel extends JPanel {
         this.setEnableAllGuessButtons(true);
         // draw new images
         this.repaint(); // this method will call paintcomponent()
+        Crystalcnt.CrystalUpdate(); // Update Crystals remaining
     }
     
     private boolean checkAnswer() {
@@ -228,6 +236,8 @@ public class GamePanel extends JPanel {
                         if (GamePanel.this.currentUserAnswer.length() == GamePanel.this.currentStage.getCorrectword().length()) { // if length of currentUserAnswer matches correct word length
                             GamePanel.this.setEnableAllGuessButtons(false); // disable all buttons after the length matches
                             if (GamePanel.this.checkAnswer()) {
+                                Crystalcnt.addCrystals(CrystalSys.getCrystalplus());
+                                Crystalcnt.CrystalUpdate();
                                 GamePanel.this.changeStage();
                             } else {
                                 ansField.setForeground(Color.red); // if answer is false then set text color to red
@@ -239,6 +249,9 @@ public class GamePanel extends JPanel {
             
             public void setGuessLetter(String letter) {
                 this.guessLetter = letter;
+            }
+            public String getGuessLetter(){
+                return this.guessLetter;
             }
         }
         
@@ -272,6 +285,101 @@ public class GamePanel extends JPanel {
                 });
             }
         }
+        
+        private class CrystalSys extends JTextArea{
+            private static int Crystalplus = 300; // Add 300 crystals when answer correctly
+            private int CrystalOwned = 500;//inital 500 crystals when start a game
+            
+            public CrystalSys(){
+                this.CrystalUpdate();
+                this.setFont(new Font("Tahoma", Font.PLAIN, 28));
+                this.setForeground(Color.blue);
+            }
+            public void CrystalUpdate(){ //Update crystal remain
+                this.setText("Crystals Remain: "+this.CrystalOwned);
+            }
+            public int Crystalremain(){
+                return this.CrystalOwned;
+            }
+            public static int getCrystalplus(){
+                return Crystalplus;
+            }
+            public void addCrystals(int a){
+                this.CrystalOwned += a;
+            }
+            public void useCrystals(int a){
+                this.CrystalOwned -= a;
+            }
+        }
+        
+        private class HintButton extends JButton {
+            private int CrystalUsePerHint = 100; // 100 Crystals need per 1 hint
+            
+            public HintButton() {
+                this.setText("Hint");
+                this.setFont(new Font("Tahoma", Font.PLAIN, 20));
+                this.setFocusPainted(false); // remove border around text
+                this.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                           // Enough Crystal - Use it and Add letter to current User Answer
+                           if (Crystalcnt.Crystalremain() >= CrystalUsePerHint) { 
+                               String correctletter = GamePanel.this.currentStage.getCorrectword();
+                               int len = GamePanel.this.currentUserAnswer.length();
+                               if (len == GamePanel.this.currentStage.getCorrectword().length()) { //Full ansField can't hint more
+                                      Crystalcnt.setText("Crystals Remain: "+Crystalcnt.Crystalremain()+"\n"+"Please del first!");
+                               }
+                               else{ //ansField not full can hint more
+                                      Crystalcnt.useCrystals(CrystalUsePerHint);
+                                      Crystalcnt.CrystalUpdate();
+                                      if (len != GamePanel.this.currentStage.getCorrectword().length() - 1){
+                                            GamePanel.this.currentUserAnswer += Character.toString(correctletter.charAt(len));
+                                            GamePanel.this.ansField.updateField();
+                                            GuessButton Correctone = new GuessButton();
+                                            for (GuessButton gb: guessButtonsArr){//get Guessbutton object with same letter and disable it
+                                                if (Character.toString(correctletter.charAt(len)).equals(gb.getGuessLetter())){
+                                                    Correctone = gb;
+                                                    if (gb.isEnabled()){
+                                                        gb.setEnabled(false);   // disable after getting pressed
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            GamePanel.this.lastPressButtonList.add(Correctone);
+                                      }
+                                      else{ // check answer too if hint to the full length
+                                            GamePanel.this.currentUserAnswer += Character.toString(correctletter.charAt(len));
+                                            GamePanel.this.ansField.updateField();
+                                            GuessButton Correctone = new GuessButton();
+                                            for (GuessButton gb: guessButtonsArr){
+                                                if (Character.toString(correctletter.charAt(len)).equals(gb.getGuessLetter())){
+                                                    Correctone = gb;
+                                                    if (gb.isEnabled()){
+                                                        gb.setEnabled(false);   // disable after getting pressed
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            GamePanel.this.lastPressButtonList.add(Correctone);
+                                            
+                                            if (GamePanel.this.checkAnswer()) {//Check answer after hint to full length
+                                                    Crystalcnt.addCrystals(CrystalSys.getCrystalplus());
+                                                    Crystalcnt.CrystalUpdate();
+                                                    GamePanel.this.changeStage();}
+                                            else {
+                                                    GamePanel.this.setEnableAllGuessButtons(false); // disable all buttons after the length matches
+                                                    ansField.setForeground(Color.red); // if answer is false then set text color to red
+                                                        }
+                                                    }
+                                                }
+                                             }
+                           // Not Enough Crystal Owned
+                           else
+                               Crystalcnt.setText("Crystals Remain: "+Crystalcnt.Crystalremain()+"\n"+"Not Enough Crystal!");
+                            }
+                    });
+                }
+            }
         
         private class answerField extends JTextField {
             public answerField() {
