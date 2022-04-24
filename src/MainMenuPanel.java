@@ -1,8 +1,10 @@
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class MainMenuPanel extends JPanel {
@@ -13,21 +15,23 @@ public class MainMenuPanel extends JPanel {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setDoubleBuffered(true);
         this.setLayout(null); // set layout manager to null in order to set button size and pos
-        this.add(new StartButton());
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                MainMenuPanel.this.setVisible(false); // click to hide main menu Panel
+            }
+        });
     }
     
-    class StartButton extends JButton {
-        public StartButton() {
-            super("เริ่ม !");
-            this.setFont(new Font("Tahoma", Font.PLAIN, 40));
-            this.setFocusPainted(false); // remove border around text
-            this.setBounds(540, 200, 200, 200); // set pos and size
-            this.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MainMenuPanel.this.setVisible(false); // click to hide main menu Panel
-                }
-            });
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g); // paint default component
+        // background image
+        try {
+            BufferedImage bg = ImageIO.read(getClass().getResourceAsStream("pictures/MainMenuImage.jpeg"));
+            g.drawImage(bg, 0, 0, screenWidth, screenHeight, null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

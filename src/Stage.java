@@ -69,8 +69,8 @@ public class Stage {
     }
     
     //method create stagelst from text file
-    public static Stage[] CreateStagelst(){
-        Stage[] Stagelst = new Stage[5];
+    public static ArrayList<Stage> CreateStagelst(){
+        ArrayList<Stage> Stagelst = new ArrayList<>();
         int Stagecnt = 0;
         String Correctword="";
         int wordcnt=0;
@@ -88,7 +88,7 @@ public class Stage {
                 if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
                 if (i>=2) IMG.add(datasplit[i]);
                 }
-            Stagelst[Stagecnt] = new Stage(Correctword,wordcnt,IMG);
+            Stagelst.add(new Stage(Correctword,wordcnt,IMG));
             Stagecnt++;
             }
             br.close();
@@ -99,8 +99,8 @@ public class Stage {
     }
     
     //method display stage list
-    public static void Displaystagelst(Stage[] a){
-        for (Stage x: a){
+    public static void Displaystagelst(ArrayList<Stage> a){
+        for (Stage x : a){
             System.out.println(x.toString());
         }
     }

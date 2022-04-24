@@ -1,11 +1,12 @@
 
+import java.util.ArrayList;
 import javax.swing.JFrame;
 
 public class Main {
 
     public static void main(String[] args) {
         // create Stage list
-        Stage[] S1 = Stage.CreateStagelst();
+        ArrayList<Stage> S1 = Stage.CreateStagelst();
         
         // init jframe
         JFrame window = new JFrame();
@@ -14,10 +15,10 @@ public class Main {
         window.setTitle("Word Guessing Game");
         
         // add game panel to window
-        GamePanel gamePanel = new GamePanel(S1);
-        MainMenuPanel mainPanel = new MainMenuPanel();
+        MainMenuPanel mainMenuPanel = new MainMenuPanel();
+        GamePanel gamePanel = new GamePanel(S1, mainMenuPanel);
         window.add(gamePanel);
-        window.setGlassPane(mainPanel); // set mainMenuPanel on first layer
+        window.setGlassPane(mainMenuPanel); // set mainMenuPanel on first layer
         window.getGlassPane().setVisible(true);
         window.pack(); // fit window to gamePanel
         window.setLocationRelativeTo(null); // window will appear on the center

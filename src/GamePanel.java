@@ -4,77 +4,95 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.util.Collections;
-import javax.swing.JTextArea;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 
 public class GamePanel extends JPanel {
     final int screenWidth = 1280;
     final int screenHeight = 720;
-    final int FPS = 30;
+    private MainMenuPanel mainMenu;
     // stage
-    private Stage[] stageList;
+    private ArrayList<Stage> stageList;
     private Stage currentStage;
     private int stageIndex;
     private String currentUserAnswer = "";
     // guess buttons array
     private GuessButton[] guessButtonsArr = new GuessButton[18];
     private ArrayList<GuessButton> lastPressButtonList = new ArrayList<>();
+    // next and back button
+    private NextStageButton nextButton;
+    private BackToMainMenuButton backButton;
     // letter array
     private ArrayList<Character> allLetter = new ArrayList<>();
     // Answer Field
     private answerField ansField;
-    // image arrayList
-    private ArrayList<JLabel> imageList = new ArrayList<>();
     //Crystal Owned
     private CrystalSys Crystalcnt; //Text display crystal left
+    // between stage image
+    private JLabel correctImage;
     
-    public GamePanel(Stage[] stageList) {
+    public GamePanel(ArrayList<Stage> stageList, MainMenuPanel mainMenuObject) {
+        this.mainMenu = mainMenuObject;
         this.setLayout(null);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.green);
         this.setDoubleBuffered(true);
         // stage
+        Collections.shuffle(stageList); // shuffle
         this.stageList = stageList;
         this.stageIndex = 0;
-        this.currentStage = stageList[stageIndex];
+        this.currentStage = stageList.get(stageIndex);
         // fill letter array
         String str = "abcdefghijklmnopqrstuvwxyz";
         for (int i = 0; i < str.length(); i++) {
             this.allLetter.add(str.charAt(i));
         }
         // buttons
-        this.placeComp(new NextStageButton(), screenWidth/2, 600, 250, 50, true);
+        this.nextButton = new NextStageButton();
+        this.backButton = new BackToMainMenuButton();
+        this.placeComp(this.nextButton, 750, 600, 150, 50, true);
+        this.placeComp(this.backButton, 520, 600, 150, 50, true);
         this.createGuessButtons();
         this.labelingGuessButtons();
         this.placeComp(new deleteButton(), 850, 290, 80, 50, true);
         this.placeComp(new HintButton(), 430, 290, 80, 50, true);
         //label --> Crystals
         Crystalcnt = new CrystalSys();
-        this.placeComp(Crystalcnt, 1100, 400, 300, 150, true);
+        this.placeComp(Crystalcnt, 1100, 290, 300, 150, true);
+        this.placeComp(new JLabel(new ImageIcon("src/pictures/crystal.png")), 1060, 290, 54, 47, true);
         // answerfield
         ansField = new answerField();
         this.placeComp(ansField, screenWidth/2, 290, 330, 60, true);
-
+        // between stage image
+        this.correctImage = new JLabel(new ImageIcon("src/pictures/correctImage.png"));
+        this.correctImage.setVisible(false);
+        this.placeComp(this.correctImage, 640, 480, 500, 500, true);
     }
      @Override
     public void paintComponent(Graphics g) {
         // Graphic g is the object that display graphic on gamePanel. when repaint() is called, it will automatically pass Graphic g to this method.
         // then we can customize this Graphic g (customize what will display on screen)
         super.paintComponent(g); // paint default component
+        // back ground image
+        try {
+            BufferedImage bg = ImageIO.read(getClass().getResourceAsStream("pictures/BackGroundImage.jpg"));
+            g.drawImage(bg, 0, 0, screenWidth, screenHeight, null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         // paint game component
         ArrayList<String> paths = this.currentStage.getimagelst();
         this.drawImage(g, paths);
-        
     }
     
     private void drawImage(Graphics g, ArrayList<String> imagePath) {
@@ -86,19 +104,31 @@ public class GamePanel extends JPanel {
                 try {
                     imageArr.add(ImageIO.read(getClass().getResourceAsStream("pictures/default_error.png")));
                 } catch (Exception e) {
+                    System.out.println(e);
                 }
             }
         }
-        int WIDTH = 200;
+        int width = 0;
         int HEIGHT = 200;
         int INTERVAL = 10;
+        int totalWidth = 0;
+        int startPoint = 0;
         int imgCnt = imageArr.size();
+        ArrayList<Integer> widthArr = new ArrayList<>();
         // find total width of all images (include interval)
-        int totalWidth = (WIDTH*imgCnt) + INTERVAL *(imgCnt - 1);
-        int startPoint = 640 - totalWidth/2;
+        for (BufferedImage img : imageArr) {
+            width = (int) ((double) img.getWidth() / img.getHeight() * HEIGHT);
+            widthArr.add(width);
+            totalWidth += width;
+        }
+        totalWidth += INTERVAL*(imgCnt-1);
+        startPoint = 640 - totalWidth/2;
         // display image
+        int posY = startPoint;
         for (int i = 0; i < imgCnt; i++) {
-            g.drawImage(imageArr.get(i), startPoint + (i*(WIDTH+INTERVAL)), 40, WIDTH, HEIGHT, null);
+            BufferedImage toDrawImg = imageArr.get(i);
+            g.drawImage(toDrawImg, posY, 40, widthArr.get(i), HEIGHT, null);
+            posY += widthArr.get(i) + INTERVAL;
         }
     }
     
@@ -184,8 +214,24 @@ public class GamePanel extends JPanel {
         this.add(component);
     }
     
+    private void betweenStage() {
+        Crystalcnt.setForeground(Color.WHITE);
+        this.nextButton.setVisible(true);
+        this.correctImage.setVisible(true);
+        // hide all guessButtons
+        for (GuessButton gb : guessButtonsArr) {
+            gb.setVisible(false);
+        }
+    }
+    
     private void changeStage() {
-        this.currentStage = stageList[++stageIndex]; // change current stage and increase stageIndex by 1
+        // hide next and back button, setVisible all guessButtons
+        this.nextButton.setVisible(false);
+        this.correctImage.setVisible(false);
+        for (GuessButton gb : guessButtonsArr) {
+            gb.setVisible(true);
+        }
+        this.currentStage = stageList.get(++stageIndex); // change current stage and increase stageIndex by 1
         this.labelingGuessButtons(); // label guess button with new stage infomation
         // reset currentUserAnswer and reset ansField
         this.currentUserAnswer = "";
@@ -207,9 +253,11 @@ public class GamePanel extends JPanel {
     
         private class NextStageButton extends JButton {
             public NextStageButton() {
-                super("next stage");
+                super("next");
+                this.setBackground(new Color(241, 241, 241));
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
+                this.setVisible(false);
                 this.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -219,11 +267,33 @@ public class GamePanel extends JPanel {
             }
     }
         
+        private class BackToMainMenuButton extends JButton {
+            public BackToMainMenuButton() {
+                super("back");
+                this.setBackground(new Color(241, 241, 241));
+                this.setFont(new Font("Tahoma", Font.PLAIN, 40));
+                this.setFocusPainted(false); // remove border around text
+                this.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        GamePanel.this.mainMenu.setVisible(true);
+                        // shuffle stagelst, change stage, reset crystal
+                        Collections.shuffle(GamePanel.this.stageList);
+                        GamePanel.this.stageIndex = -1;
+                        GamePanel.this.changeStage();
+                        GamePanel.this.Crystalcnt.resetCrystals();
+                        GamePanel.this.Crystalcnt.setForeground(Color.WHITE);
+                    }
+                });        
+            }
+        }
+        
         private class GuessButton extends JButton {
             private String guessLetter;
             
             public GuessButton() {
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
+                this.setBackground(new Color(241, 241, 241));
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
                     @Override
@@ -238,7 +308,7 @@ public class GamePanel extends JPanel {
                             if (GamePanel.this.checkAnswer()) {
                                 Crystalcnt.addCrystals(CrystalSys.getCrystalplus());
                                 Crystalcnt.CrystalUpdate();
-                                GamePanel.this.changeStage();
+                                GamePanel.this.betweenStage();
                             } else {
                                 ansField.setForeground(Color.red); // if answer is false then set text color to red
                             }
@@ -257,7 +327,8 @@ public class GamePanel extends JPanel {
         
         private class deleteButton extends JButton {
             public deleteButton() {
-                this.setText("del");
+                this.setBackground(new Color(241, 241, 241));
+                this.setText("ลบ");
                 this.setFont(new Font("Tahoma", Font.PLAIN, 20));
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
@@ -286,17 +357,18 @@ public class GamePanel extends JPanel {
             }
         }
         
-        private class CrystalSys extends JTextArea{
+        private class CrystalSys extends JLabel {
+            private final int INITIALCRYSTAL = 500; 
             private static int Crystalplus = 300; // Add 300 crystals when answer correctly
-            private int CrystalOwned = 500;//inital 500 crystals when start a game
+            private int CrystalOwned = INITIALCRYSTAL;//inital 500 crystals when start a game
             
             public CrystalSys(){
                 this.CrystalUpdate();
-                this.setFont(new Font("Tahoma", Font.PLAIN, 28));
-                this.setForeground(Color.blue);
+                this.setFont(new Font("Tahoma", Font.PLAIN, 35));
+                this.setForeground(Color.WHITE);
             }
             public void CrystalUpdate(){ //Update crystal remain
-                this.setText("Crystals Remain: "+this.CrystalOwned);
+                this.setText(this.CrystalOwned + "");
             }
             public int Crystalremain(){
                 return this.CrystalOwned;
@@ -310,14 +382,20 @@ public class GamePanel extends JPanel {
             public void useCrystals(int a){
                 this.CrystalOwned -= a;
             }
+            
+            public void resetCrystals() {
+                this.CrystalOwned = INITIALCRYSTAL;
+                this.CrystalUpdate();
+            }
         }
         
         private class HintButton extends JButton {
             private int CrystalUsePerHint = 100; // 100 Crystals need per 1 hint
             
             public HintButton() {
-                this.setText("Hint");
+                this.setText("เฉลย");
                 this.setFont(new Font("Tahoma", Font.PLAIN, 20));
+                this.setBackground(new Color(241, 241, 241));
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
                     @Override
@@ -375,7 +453,7 @@ public class GamePanel extends JPanel {
                                              }
                            // Not Enough Crystal Owned
                            else
-                               Crystalcnt.setText("Crystals Remain: "+Crystalcnt.Crystalremain()+"\n"+"Not Enough Crystal!");
+                               Crystalcnt.setForeground(Color.red);
                             }
                     });
                 }
