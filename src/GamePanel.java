@@ -253,7 +253,7 @@ public class GamePanel extends JPanel {
     
         private class NextStageButton extends JButton {
             public NextStageButton() {
-                super("next");
+                super("ถัดไป");
                 this.setBackground(new Color(241, 241, 241));
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
@@ -269,7 +269,7 @@ public class GamePanel extends JPanel {
         
         private class BackToMainMenuButton extends JButton {
             public BackToMainMenuButton() {
-                super("back");
+                super("กลับ");
                 this.setBackground(new Color(241, 241, 241));
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
