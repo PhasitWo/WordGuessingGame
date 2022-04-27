@@ -283,6 +283,7 @@ public class GamePanel extends JPanel {
                         GamePanel.this.changeStage();
                         GamePanel.this.Crystalcnt.resetCrystals();
                         GamePanel.this.Crystalcnt.setForeground(Color.WHITE);
+                        GamePanel.this.ansField.setForeground(Color.WHITE);
                     }
                 });        
             }
