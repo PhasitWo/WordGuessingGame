@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 public class GamePanel extends JPanel {
     final int screenWidth = 1280;
     final int screenHeight = 720;
+    final static Color shareColor = new Color(255, 234, 234);
+    final static Color shareTextColor = new Color(255, 249, 178);
     private MainMenuPanel mainMenu;
     // stage
     private ArrayList<Stage> stageList;
@@ -40,6 +42,8 @@ public class GamePanel extends JPanel {
     private CrystalSys Crystalcnt; //Text display crystal left
     // stageIndex
     private StageIndexLabel stageIndexLabel;
+    // syllableCount
+    private SyllableCountLabel syllableCountLabel;
     // between stage image
     private JLabel correctImage;
     
@@ -62,28 +66,32 @@ public class GamePanel extends JPanel {
         // buttons
         this.nextButton = new NextStageButton();
         this.backButton = new BackToMainMenuButton();
-        this.placeComp(this.nextButton, 750, 600, 150, 50, true);
-        this.placeComp(this.backButton, 520, 600, 150, 50, true);
+        this.placeComp(this.nextButton, 750, 660, 150, 50, true);
+        this.placeComp(this.backButton, 520, 660, 150, 50, true);
         this.createGuessButtons();
         this.labelingGuessButtons();
-        this.placeComp(new deleteButton(), 850, 290, 80, 50, true);
-        this.placeComp(new HintButton(), 430, 290, 80, 50, true);
+        this.placeComp(new deleteButton(), 850, 350, 80, 50, true);
+        this.placeComp(new HintButton(), 430, 350, 80, 50, true);
         // label --> Crystals
         Crystalcnt = new CrystalSys();
         this.placeComp(Crystalcnt, 1100, 290, 300, 150, true);
         this.placeComp(new JLabel(new ImageIcon("src/pictures/crystal.png")), 1060, 290, 54, 47, true);
-        this.placeComp(new CrystalUsageLabel(), 50, 40, 300, 150, false);
-        this.placeComp(new JLabel(new ImageIcon("src/pictures/crystal.png")), 250, 120, 54, 47, true);
+        // label --> CrystalUsageLabel
+        this.placeComp(new CrystalUsageLabel(), 50, 240, 300, 150, false);
+        this.placeComp(new JLabel(new ImageIcon("src/pictures/crystal.png")), 250, 315, 54, 47, true);
         // label --> stageIndex
         this.stageIndexLabel = new StageIndexLabel();
-        this.placeComp(this.stageIndexLabel, 50, 0, 300, 150, false);
+        this.placeComp(this.stageIndexLabel, 50, 200, 300, 150, false);
+        // label --> syllableCount
+        this.syllableCountLabel = new SyllableCountLabel();
+        this.placeComp(this.syllableCountLabel, screenWidth/2, 280, 120, 150, true);
         // answerfield
         ansField = new answerField();
-        this.placeComp(ansField, screenWidth/2, 290, 330, 60, true);
+        this.placeComp(ansField, screenWidth/2, 350, 330, 60, true);
         // between stage image
         this.correctImage = new JLabel(new ImageIcon("src/pictures/correctImage.png"));
         this.correctImage.setVisible(false);
-        this.placeComp(this.correctImage, 640, 480, 500, 500, true);
+        this.placeComp(this.correctImage, 640, 540, 500, 500, true);
     }
      @Override
     public void paintComponent(Graphics g) {
@@ -145,7 +153,7 @@ public class GamePanel extends JPanel {
         int BUTTON_HEIGHT = 70;
         int INTERVAL = 10;
         int X_START_POINT = (screenWidth/2) - ((BUTTON_WIDTH*6) + (INTERVAL*5))/2;
-        int Y_START_POINT = 330;
+        int Y_START_POINT = 390;
         int cnt = 0;
         for (int y = 0; y <= 2; y++) {
             for (int x = 0; x <= 5; x++) {
@@ -222,7 +230,7 @@ public class GamePanel extends JPanel {
     }
     
     private void betweenStage() {
-        Crystalcnt.setForeground(Color.WHITE);
+        Crystalcnt.setForeground(GamePanel.shareTextColor);
         this.nextButton.setVisible(true);
         this.correctImage.setVisible(true);
         // hide all guessButtons
@@ -239,7 +247,8 @@ public class GamePanel extends JPanel {
             gb.setVisible(true);
         }
         this.currentStage = stageList.get(++stageIndex); // change current stage and increase stageIndex by 1
-        this.stageIndexLabel.updateIndex(); // update stageIndexLabel
+        this.stageIndexLabel.update(); // update stageIndexLabel
+        this.syllableCountLabel.update(); // update syllableCount
         this.labelingGuessButtons(); // label guess button with new stage infomation
         // reset currentUserAnswer and reset ansField
         this.currentUserAnswer = "";
@@ -262,7 +271,7 @@ public class GamePanel extends JPanel {
         private class NextStageButton extends JButton {
             public NextStageButton() {
                 super("ถัดไป");
-                this.setBackground(new Color(241, 241, 241));
+                this.setBackground(GamePanel.shareColor);
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
                 this.setVisible(false);
@@ -278,7 +287,7 @@ public class GamePanel extends JPanel {
         private class BackToMainMenuButton extends JButton {
             public BackToMainMenuButton() {
                 super("กลับ");
-                this.setBackground(new Color(241, 241, 241));
+                this.setBackground(GamePanel.shareColor);
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
@@ -290,7 +299,7 @@ public class GamePanel extends JPanel {
                         GamePanel.this.stageIndex = -1;
                         GamePanel.this.changeStage();
                         GamePanel.this.Crystalcnt.resetCrystals();
-                        GamePanel.this.Crystalcnt.setForeground(Color.WHITE);
+                        GamePanel.this.Crystalcnt.setForeground(GamePanel.shareTextColor);
                         GamePanel.this.ansField.setForeground(Color.BLACK);
                     }
                 });        
@@ -302,7 +311,7 @@ public class GamePanel extends JPanel {
             
             public GuessButton() {
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
-                this.setBackground(new Color(241, 241, 241));
+                this.setBackground(GamePanel.shareColor);
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
                     @Override
@@ -336,7 +345,7 @@ public class GamePanel extends JPanel {
         
         private class deleteButton extends JButton {
             public deleteButton() {
-                this.setBackground(new Color(241, 241, 241));
+                this.setBackground(GamePanel.shareColor);
                 this.setText("ลบ");
                 this.setFont(new Font("Tahoma", Font.PLAIN, 20));
                 this.setFocusPainted(false); // remove border around text
@@ -374,7 +383,7 @@ public class GamePanel extends JPanel {
             public CrystalSys(){
                 this.CrystalUpdate();
                 this.setFont(new Font("Tahoma", Font.PLAIN, 35));
-                this.setForeground(Color.WHITE);
+                this.setForeground(GamePanel.shareTextColor);
             }
             public void CrystalUpdate(){ //Update crystal remain
                 this.setText(this.CrystalOwned + "");
@@ -404,7 +413,7 @@ public class GamePanel extends JPanel {
             public HintButton() {
                 this.setText("เฉลย");
                 this.setFont(new Font("Tahoma", Font.PLAIN, 20));
-                this.setBackground(new Color(241, 241, 241));
+                this.setBackground(GamePanel.shareColor);
                 this.setFocusPainted(false); // remove border around text
                 this.addActionListener(new ActionListener() {
                     @Override
@@ -473,6 +482,7 @@ public class GamePanel extends JPanel {
                 this.setFont(new Font("Tahoma", Font.PLAIN, 40));
                 this.updateField();
                 this.setEditable(false);
+                this.setBackground(GamePanel.shareColor);
             }
             
             public void updateField() {
@@ -484,10 +494,10 @@ public class GamePanel extends JPanel {
             public StageIndexLabel() {
                 this.setFont(new Font("Tahoma", Font.PLAIN, 30));
                 this.setText("Stage : " + (GamePanel.this.stageIndex + 1));
-                this.setForeground(Color.WHITE);
+                this.setForeground(GamePanel.shareTextColor);
             }
             
-            public void updateIndex() {
+            public void update() {
                 this.setText("Stage : " + (GamePanel.this.stageIndex + 1));
             }
         }
@@ -496,7 +506,19 @@ public class GamePanel extends JPanel {
             public CrystalUsageLabel() {
                 this.setFont(new Font("Tahoma", Font.PLAIN, 30));
                 this.setText("เฉลย : -100");
-                this.setForeground(Color.WHITE);
+                this.setForeground(GamePanel.shareTextColor);
+            }
+        }
+        
+        private class SyllableCountLabel extends JLabel {
+            public SyllableCountLabel() {
+                this.setFont(new Font("Tahoma", Font.PLAIN, 30));
+                this.setText("" + GamePanel.this.currentStage.getwordcnt() + " พยางค์");
+                this.setForeground(GamePanel.shareTextColor);
+            }
+            
+            public void update() {
+                this.setText("" + GamePanel.this.currentStage.getwordcnt() + " พยางค์");
             }
         }
         
