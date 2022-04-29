@@ -408,7 +408,7 @@ public class GamePanel extends JPanel {
         }
         
         private class HintButton extends JButton {
-            private int CrystalUsePerHint = 100; // 100 Crystals need per 1 hint
+            private int CrystalUsePerHint = 100; // 100 Crystals needed per 1 hint
             
             public HintButton() {
                 this.setText("เฉลย");
@@ -461,7 +461,7 @@ public class GamePanel extends JPanel {
                                             if (GamePanel.this.checkAnswer()) {//Check answer after hint to full length
                                                     Crystalcnt.addCrystals(CrystalSys.getCrystalplus());
                                                     Crystalcnt.CrystalUpdate();
-                                                    GamePanel.this.changeStage();}
+                                                    GamePanel.this.betweenStage();}
                                             else {
                                                     GamePanel.this.setEnableAllGuessButtons(false); // disable all buttons after the length matches
                                                     ansField.setForeground(Color.red); // if answer is false then set text color to red
