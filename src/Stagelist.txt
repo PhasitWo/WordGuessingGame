@@ -3,3 +3,5 @@ Jellyfish 3 WordGuessImage/Jelly.JPG WordGuessImage/Fish.JPG
 Keyboard 2 WordGuessImage/Key.JPG WordGuessImage/Board.JPG
 Lipstick 3 WordGuessImage/Lip.JPG WordGuessImage/Stick.JPG
 Facebook 2 WordGuessImage/Face.JPG WordGuessImage/Book.JPG
+Backup 2 WordGuessImage/Back.JPG WordGuessImage/Up.JPG
+Backspace 3 WordGuessImage/Back.JPG WordGuessImage/Space.JPG
