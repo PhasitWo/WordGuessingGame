@@ -85,7 +85,7 @@ public class Stage {
             for (int i=0;i<datasplit.length;i++){
                 if (i==0) Correctword = datasplit[i];
                 if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
-                if (i>=2) IMG.add(datasplit[i]);
+                if (i>=2) IMG.add("WordGuessImage/"+datasplit[i]);
                 }
             Stagelst.add(new Stage(Correctword,wordcnt,IMG));
             Stagecnt++;
