@@ -38,7 +38,6 @@ public class GamePanel extends JPanel {
     private BackToMainMenuButton backButton;
     // letter array
     private ArrayList<Character> allLetter = new ArrayList<>();
-    private ArrayList<Character> thaiall_letter = new ArrayList<>();
     // Answer Field
     private answerField ansField;
     // Crystal Owned
