@@ -59,7 +59,7 @@ public class GamePanel extends JPanel {
         this.stageIndex = 0;
         this.currentStage = stageList.get(stageIndex);
         // fill letter array
-        String str = "abcdefghijklmnopqrstuvwxyz";
+        String str = "ผปแอิืทมใฝงวสา่้เดกหฟๆไำพะัีรนยบลชขจตคึุถภๅฉฮ์ฒฬฦซศษ๋็ฌโฏฆฤฐญฯณ๊ธฑูฎ";
         for (int i = 0; i < str.length(); i++) {
             this.allLetter.add(str.charAt(i));
         }
@@ -132,18 +132,18 @@ public class GamePanel extends JPanel {
         ArrayList<Integer> widthArr = new ArrayList<>();
         // find total width of all images (include interval)
         for (BufferedImage img : imageArr) {
-            width = (int) ((double) img.getWidth() / img.getHeight() * HEIGHT);
+            width = (int) ((double) img.getWidth() / img.getHeight() * HEIGHT); // convert image to have 200 height but the same ratio.
             widthArr.add(width);
             totalWidth += width;
         }
         totalWidth += INTERVAL*(imgCnt-1);
         startPoint = 640 - totalWidth/2;
         // display image
-        int posY = startPoint;
+        int posX = startPoint;
         for (int i = 0; i < imgCnt; i++) {
             BufferedImage toDrawImg = imageArr.get(i);
-            g.drawImage(toDrawImg, posY, 40, widthArr.get(i), HEIGHT, null);
-            posY += widthArr.get(i) + INTERVAL;
+            g.drawImage(toDrawImg, posX, 40, widthArr.get(i), HEIGHT, null);
+            posX += widthArr.get(i) + INTERVAL;
         }
     }
     

@@ -8,3 +8,43 @@
 ถ้วยรางวัล 3 ถ้วย.JPG ราง.JPG One.JPG
 ข้าวกล้อง 2 ข้าว.JPG กล้อง.JPG
 ส้มโชกุน 3 ส้ม.JPG โชกุน.JPG
+ปลากัด 2 Fish.JPG catBite.JPG
+ชมพูทวีป 4 Pink.JPG Continent.JPG
+ตามเนื้อผ้า 3 Follow.JPG Meat.JPG Blanket.JPG
+ทุบหม้อข้าว 3 Break.JPG Pot.JPG Rice.JPG
+ปลาส้ม 2 Fish.JPG ส้ม.JPG
+ตามใจ 2 Follow.JPG หัวใจ.JPG
+ชั่งใจ 2 ชั่ง.JPG หัวใจ.JPG
+กินใจ 2 กิน.JPG หัวใจ.JPG
+ท่าไม้ตาย 3 Action.JPG Wood.JPG Dead.JPG
+ตายใจ 2 Dead.JPG หัวใจ.JPG
+ช่างไม้ 2 ชั่ง.JPG Wood.JPG
+โรงสีข้าว 3 โลง.JPG Pink.JPG Rice.JPG
+เห็ดหูหนู 3 Mushroom.JPG Ear.JPG Dead.JPG
+ถูกปาก 2 Correct.JPG Mouth.JPG
+ถูกใจ 2 Correct.JPG หัวใจ.JPG
+มือกาว 2 Hand.JPG Glue.JPG
+เครื่องลาง 2 Engine.JPG ราง.JPG
+ใจแตก 2 หัวใจ.JPG Break.JPG
+เสือนอนกิน 3 Tiger.JPG นอนทับ.JPG กิน.JPG
+ก้นหอย 2 Butt.JPG Shell.JPG
+ก้นหม้อ 2 Butt.JPG Pot.JPG
+ขึ้นหม้อ 2 Up.JPG Pot.JPG
+โล่งใจ 2 โลง.JPG หัวใจ.JPG
+ไม้กันหมา 3 Wood.JPG Stop.JPG นอนทับ.JPG
+ใจร้อน 2 หัวใจ.JPG Hot.JPG
+สับปะรด 3 Slice.JPG เส้นประ.JPG Car.JPG
+รดน้ำ 2 Car.JPG หนองน้ำ.JPG
+น้ำใจ 2 หนองน้ำ.JPG หัวใจ.JPG
+มะม่วง 2 Horse.JPG Purple.JPG
+กล้วยหอม 2 Banana.JPG Onion.JPG
+กล้วยๆ 2 Banana.JPG Banana.JPG
+โรงรถ 2 โลง.JPG Car.JPG
+มะขาม 2 Horse.JPG Laugh.JPG
+ม้ามืด 2 Horse.JPG Black.JPG
+ใจดำ 2 หัวใจ.JPG Black.JPG
+ตาต่อตา 3 Eye.JPG Bee.JPG Eye.JPG
+หอมปากหอมคอ 4 Onion.JPG Mouth.JPG Onion.JPG Neck.JPG
+คอแข็ง 2 Neck.JPG Diamond.JPG
+กินเผ็ด 2 กิน.JPG Diamond.JPG
+หน้ามืด 2 Face.JPG Black.JPG
