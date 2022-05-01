@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.util.Collections;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 public class GamePanel extends JPanel {
@@ -23,6 +24,7 @@ public class GamePanel extends JPanel {
     final static Color shareColor = new Color(255, 234, 234);
     final static Color shareTextColor = new Color(255, 249, 178);
     private MainMenuPanel mainMenu;
+    private JFrame window;
     // stage
     private ArrayList<Stage> stageList;
     private Stage currentStage;
@@ -48,33 +50,35 @@ public class GamePanel extends JPanel {
     // between stage image
     private JLabel correctImage;
     // Language choosen "English" or "Thai"
-    private String lang = "";
+    private String lang = "Thai";
     
-    public GamePanel(ArrayList<Stage> stageList, MainMenuPanel mainMenuObject) {
+    public GamePanel(ArrayList<Stage> stageListThai, ArrayList<Stage> stageListEng, MainMenuPanel mainMenuObject, JFrame window) {
         this.mainMenu = mainMenuObject;
+        this.window = window;
         this.setLayout(null);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.green);
         this.setDoubleBuffered(true);
-        // stage
-        Collections.shuffle(stageList); // shuffle
-        this.stageList = stageList;
-        this.stageIndex = 0;
-        this.currentStage = stageList.get(stageIndex);
         // Choose lang based on stagelist lang
+        this.lang = mainMenuObject.getLanguage();
         if (lang.equals("English")){
-        String str = "abcdefghijklmnopqrstuvwxyz"; // fill English letter array
-        // fill letter array
-        for (int i = 0; i < str.length(); i++) {
-            this.allLetter.add(str.charAt(i));
-            }
+            String str = "abcdefghijklmnopqrstuvwxyz"; // fill English letter array
+            this.stageList = stageListEng;
+            for (int i = 0; i < str.length(); i++) {
+                this.allLetter.add(str.charAt(i));
+                }
         }
         else if (lang.equals("Thai")){
-        String tletter = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรฤลฦวศษสหฬอฮ"; //fill Thai letter array
-        for (int i = 0; i < tletter.length(); i++) {
-            this.allLetter.add(tletter.charAt(i));
-            }
+            String tletter = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรฤลฦวศษสหฬอฮิื์่๋้็ี๊ัะำไๆใ"; //fill Thai letter array
+            this.stageList = stageListThai;
+            for (int i = 0; i < tletter.length(); i++) {
+                this.allLetter.add(tletter.charAt(i));
+                }
         }
+        // stage
+        Collections.shuffle(stageList); // shuffle
+        this.stageIndex = 0;
+        this.currentStage = stageList.get(0);
         // buttons
         this.nextButton = new NextStageButton();
         this.backButton = new BackToMainMenuButton();
@@ -306,13 +310,14 @@ public class GamePanel extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         GamePanel.this.mainMenu.setVisible(true);
+                        GamePanel.this.window.remove(GamePanel.this);
                         // shuffle stagelst, change stage, reset crystal
-                        Collections.shuffle(GamePanel.this.stageList);
-                        GamePanel.this.stageIndex = -1;
-                        GamePanel.this.changeStage();
-                        GamePanel.this.Crystalcnt.resetCrystals();
-                        GamePanel.this.Crystalcnt.setForeground(GamePanel.shareTextColor);
-                        GamePanel.this.ansField.setForeground(Color.BLACK);
+//                        Collections.shuffle(GamePanel.this.stageList);
+//                        GamePanel.this.stageIndex = -1;
+//                        GamePanel.this.changeStage();
+//                        GamePanel.this.Crystalcnt.resetCrystals();
+//                        GamePanel.this.Crystalcnt.setForeground(GamePanel.shareTextColor);
+//                        GamePanel.this.ansField.setForeground(Color.BLACK);
                     }
                 });        
             }
