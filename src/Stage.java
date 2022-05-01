@@ -76,7 +76,7 @@ public class Stage {
         BufferedReader br = null;        
         
         try {
-            br = new BufferedReader (new FileReader("src/Stagelist.txt"));
+            br = new BufferedReader (new FileReader("src/StagelistThai.txt"));
             String fileLine = "";
             while ((fileLine = br.readLine()) != null) {
             String data = fileLine;
