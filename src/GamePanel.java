@@ -311,13 +311,6 @@ public class GamePanel extends JPanel {
                     public void actionPerformed(ActionEvent e) {
                         GamePanel.this.mainMenu.setVisible(true);
                         GamePanel.this.window.remove(GamePanel.this);
-                        // shuffle stagelst, change stage, reset crystal
-//                        Collections.shuffle(GamePanel.this.stageList);
-//                        GamePanel.this.stageIndex = -1;
-//                        GamePanel.this.changeStage();
-//                        GamePanel.this.Crystalcnt.resetCrystals();
-//                        GamePanel.this.Crystalcnt.setForeground(GamePanel.shareTextColor);
-//                        GamePanel.this.ansField.setForeground(Color.BLACK);
                     }
                 });        
             }
