@@ -36,6 +36,7 @@ public class GamePanel extends JPanel {
     private BackToMainMenuButton backButton;
     // letter array
     private ArrayList<Character> allLetter = new ArrayList<>();
+    private ArrayList<Character> thaiall_letter = new ArrayList<>();
     // Answer Field
     private answerField ansField;
     // Crystal Owned
@@ -46,6 +47,8 @@ public class GamePanel extends JPanel {
     private SyllableCountLabel syllableCountLabel;
     // between stage image
     private JLabel correctImage;
+    // Language choosen "English" or "Thai"
+    private String lang = "";
     
     public GamePanel(ArrayList<Stage> stageList, MainMenuPanel mainMenuObject) {
         this.mainMenu = mainMenuObject;
@@ -58,10 +61,20 @@ public class GamePanel extends JPanel {
         this.stageList = stageList;
         this.stageIndex = 0;
         this.currentStage = stageList.get(stageIndex);
-        // fill letter array
+        // Choose lang based on stagelist lang
+        if (lang.equals("English")){
+        // fill English letter array
         String str = "abcdefghijklmnopqrstuvwxyz";
         for (int i = 0; i < str.length(); i++) {
             this.allLetter.add(str.charAt(i));
+            }
+        }
+        else if (lang.equals("Thai")){
+        //fill Thai letter array
+        String tletter = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรฤลฦวศษสหฬอฮ";
+        for (int i = 0; i < tletter.length(); i++) {
+            this.allLetter.add(tletter.charAt(i));
+            }
         }
         // buttons
         this.nextButton = new NextStageButton();
