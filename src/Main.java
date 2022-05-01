@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         // create Stage list
         ArrayList<Stage> S1 = Stage.CreateStagelst();
+        ArrayList<Stage> S2 = Stage.CreateThaiStagelst();        
         
         // init jframe
         JFrame window = new JFrame();
@@ -16,7 +17,7 @@ public class Main {
         
         // add game panel to window
         MainMenuPanel mainMenuPanel = new MainMenuPanel();
-        GamePanel gamePanel = new GamePanel(S1, mainMenuPanel);
+        GamePanel gamePanel = new GamePanel(S2, mainMenuPanel);
         window.add(gamePanel);
         window.setGlassPane(mainMenuPanel); // set mainMenuPanel on first layer
         window.getGlassPane().setVisible(true);
