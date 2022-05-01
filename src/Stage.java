@@ -96,6 +96,35 @@ public class Stage {
         }
         return Stagelst;
     }
+    //method create Thai stagelist
+    public static ArrayList<Stage> CreateThaiStagelst(){
+        ArrayList<Stage> Stagelst = new ArrayList<>();
+        int Stagecnt = 0;
+        String Correctword="";
+        int wordcnt=0;
+        BufferedReader br = null;        
+        
+        try {
+            br = new BufferedReader (new FileReader("src/StagelistThai.txt"));
+            String fileLine = "";
+            while ((fileLine = br.readLine()) != null) {
+            String data = fileLine;
+            String[] datasplit = data.split(" ");
+            ArrayList IMG = new ArrayList<String>();
+            for (int i=0;i<datasplit.length;i++){
+                if (i==0) Correctword = datasplit[i];
+                if (i==1) wordcnt = Integer.parseInt(datasplit[i]);
+                if (i>=2) IMG.add("WordGuessImage/"+datasplit[i]);
+                }
+            Stagelst.add(new Stage(Correctword,wordcnt,IMG));
+            Stagecnt++;
+            }
+            br.close();
+        } catch (IOException ioe) {
+            ioe.getMessage();
+        }
+        return Stagelst;
+    }
     
     //method display stage list
     public static void Displaystagelst(ArrayList<Stage> a){
