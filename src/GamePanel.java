@@ -262,6 +262,12 @@ public class GamePanel extends JPanel {
         for (GuessButton gb : guessButtonsArr) {
             gb.setVisible(true);
         }
+        // in case the game reach last stage
+        if (stageIndex == stageList.size() - 1) {
+            this.mainMenu.setVisible(true); // return to mainMenu
+            this.window.remove(GamePanel.this);
+            return;
+        }
         this.currentStage = stageList.get(++stageIndex); // change current stage and increase stageIndex by 1
         this.stageIndexLabel.update(); // update stageIndexLabel
         this.syllableCountLabel.update(); // update syllableCount
@@ -428,6 +434,7 @@ public class GamePanel extends JPanel {
                 this.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        GamePanel.this.changeStage();
                            // Enough Crystal - Use it and Add letter to current User Answer
                            if (Crystalcnt.Crystalremain() >= CrystalUsePerHint) { 
                                String correctletter = GamePanel.this.currentStage.getCorrectword();
